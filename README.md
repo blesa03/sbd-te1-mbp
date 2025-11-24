@@ -49,7 +49,7 @@ TZ=Europe/Madrid
 
 1. Clonar el repositorio:
 
-```
+```bash
 git clone https://github.com/blesa03/sbd-te1-mbp.git
 cd sbd-te1-mbp
 ```
@@ -58,13 +58,13 @@ cd sbd-te1-mbp
 
 3. Levantar la pila:
 
-```
+```bash
 docker compose up -d
 ```
 
 4. Comprobar que los contenedores están en marcha:
 
-```
+```bash
 docker ps
 ```
 
