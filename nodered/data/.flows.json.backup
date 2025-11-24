@@ -1,0 +1,210 @@
+[
+    {
+        "id": "7e1f8b93dbfcaa1b",
+        "type": "tab",
+        "label": "BTC Price Flow",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "5b48c75f5c8c63a1",
+        "type": "influxdb",
+        "hostname": "influxdb",
+        "port": "8086",
+        "protocol": "http",
+        "database": "crypto_data",
+        "name": "Influx Local",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://influxdb:8086",
+        "timeout": "3000",
+        "rejectUnauthorized": false
+    },
+    {
+        "id": "2a04db0f9dc2b6b1",
+        "type": "inject",
+        "z": "7e1f8b93dbfcaa1b",
+        "name": "Cada 10 minutos",
+        "props": [],
+        "repeat": "600",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "5",
+        "topic": "",
+        "x": 160,
+        "y": 140,
+        "wires": [
+            [
+                "e0de7afee8efb83a"
+            ]
+        ]
+    },
+    {
+        "id": "e0de7afee8efb83a",
+        "type": "http request",
+        "z": "7e1f8b93dbfcaa1b",
+        "name": "GET CoinGecko BTC",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=eur,usd&include_24hr_change=true",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 390,
+        "y": 140,
+        "wires": [
+            [
+                "294e61602ceabada"
+            ]
+        ]
+    },
+    {
+        "id": "b81db02d9b4dbb6b",
+        "type": "function",
+        "z": "7e1f8b93dbfcaa1b",
+        "name": "Formatear datos BTC EUR",
+        "func": "if (!msg.payload.bitcoin) {\n    node.error(\"Respuesta inválida en EUR\", msg);\n    return null;\n}\n\nconst data = msg.payload.bitcoin;\n\nmsg.payload = {\n    price: parseFloat(data.eur),\n    change_24h: parseFloat(data.eur_24h_change)\n};\n\nmsg.tags = {\n    symbol: \"BTC\",\n    currency: \"EUR\",\n    source: \"coingecko\"\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 40,
+        "wires": [
+            [
+                "92f63c7a1f4b8c2e",
+                "c1eed44589595f1c"
+            ]
+        ]
+    },
+    {
+        "id": "92f63c7a1f4b8c2e",
+        "type": "influxdb out",
+        "z": "7e1f8b93dbfcaa1b",
+        "influxdb": "5b48c75f5c8c63a1",
+        "name": "Guardar en InfluxDB",
+        "measurement": "crypto_price",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "crypto_data",
+        "precisionV18FluxV20": "ns",
+        "retentionPolicyV18Flux": "",
+        "org": "mbp_org",
+        "bucket": "crypto_data",
+        "x": 1480,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "c1eed44589595f1c",
+        "type": "debug",
+        "z": "7e1f8b93dbfcaa1b",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1390,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "294e61602ceabada",
+        "type": "function",
+        "z": "7e1f8b93dbfcaa1b",
+        "name": "Manejar error HTTP + reintento",
+        "func": "const status = msg.statusCode;\n\n// Si hay código HTTP y NO es 200 -> error\nif (status && status !== 200) {\n    const intentos = (msg._retryCount || 0) + 1;\n    msg._retryCount = intentos;\n\n    const texto = `Error HTTP ${status} al llamar a CoinGecko (intento ${intentos})`;\n    node.warn(texto); // log en la pestaña de depuración\n\n    // Hasta 2 intentos en total (1º fallo + 1 reintento)\n    if (intentos <= 2) {\n        // Enviamos por la salida 2 para reintentar\n        return [null, msg];\n    } else {\n        // Si sigue fallando, registramos error y cortamos el flujo\n        node.error(texto + \" – abortando tras reintentos\", msg);\n        return [null, null];\n    }\n}\n\n// Si no hay statusCode o es 200, continuamos por la salida 1\nreturn [msg, null];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 140,
+        "wires": [
+            [
+                "b81db02d9b4dbb6b",
+                "11cbcd335671207a"
+            ],
+            [
+                "5f96fb57c5e2950e"
+            ]
+        ]
+    },
+    {
+        "id": "5f96fb57c5e2950e",
+        "type": "delay",
+        "z": "7e1f8b93dbfcaa1b",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "10",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 570,
+        "y": 300,
+        "wires": [
+            [
+                "e0de7afee8efb83a"
+            ]
+        ]
+    },
+    {
+        "id": "11cbcd335671207a",
+        "type": "function",
+        "z": "7e1f8b93dbfcaa1b",
+        "name": "Formatear datos BTC USD",
+        "func": "if (!msg.payload.bitcoin) {\n    node.error(\"Respuesta inválida en USD\", msg);\n    return null;\n}\n\nconst data = msg.payload.bitcoin;\n\nmsg.payload = {\n    price: parseFloat(data.usd),\n    change_24h: parseFloat(data.usd_24h_change)\n};\n\nmsg.tags = {\n    symbol: \"BTC\",\n    currency: \"USD\",\n    source: \"coingecko\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 140,
+        "wires": [
+            [
+                "92f63c7a1f4b8c2e",
+                "8399b59ca30237ad"
+            ]
+        ]
+    },
+    {
+        "id": "8399b59ca30237ad",
+        "type": "debug",
+        "z": "7e1f8b93dbfcaa1b",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1380,
+        "y": 280,
+        "wires": []
+    }
+]

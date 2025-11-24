@@ -1,0 +1,67 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@10.8.2
+2 info using node@v20.19.5
+3 silly config load:file:/usr/local/lib/node_modules/npm/npmrc
+4 silly config load:file:/data/.npmrc
+5 silly config load:file:/usr/src/node-red/.npmrc
+6 silly config load:file:/usr/local/etc/npmrc
+7 verbose title npm install node-red-contrib-influxdb
+8 verbose argv "install" "node-red-contrib-influxdb"
+9 verbose logfile logs-max:10 dir:/data/.npm/_logs/2025-11-05T09_19_29_307Z-
+10 verbose logfile /data/.npm/_logs/2025-11-05T09_19_29_307Z-debug-0.log
+11 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+12 silly logfile done cleaning log files
+13 silly idealTree buildDeps
+14 silly fetch manifest node-red-contrib-influxdb@*
+15 silly packumentCache full:https://registry.npmjs.org/node-red-contrib-influxdb cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/npm 302ms
+17 http fetch GET 200 https://registry.npmjs.org/node-red-contrib-influxdb 767ms (cache miss)
+18 silly packumentCache full:https://registry.npmjs.org/node-red-contrib-influxdb set size:undefined disposed:false
+19 silly placeDep ROOT node-red-contrib-influxdb@0.7.0 OK for: node-red-project@0.0.1 want: *
+20 silly fetch manifest influx@~5.9.3
+21 silly packumentCache full:https://registry.npmjs.org/influx cache-miss
+22 silly fetch manifest @influxdata/influxdb-client@~1.33.2
+23 silly packumentCache full:https://registry.npmjs.org/@influxdata%2finfluxdb-client cache-miss
+24 silly fetch manifest lodash@~4.17.21
+25 silly packumentCache full:https://registry.npmjs.org/lodash cache-miss
+26 http fetch GET 200 https://registry.npmjs.org/lodash 92ms (cache miss)
+27 silly packumentCache full:https://registry.npmjs.org/lodash set size:undefined disposed:false
+28 http fetch GET 200 https://registry.npmjs.org/influx 285ms (cache miss)
+29 silly packumentCache full:https://registry.npmjs.org/influx set size:undefined disposed:false
+30 http fetch GET 200 https://registry.npmjs.org/@influxdata%2finfluxdb-client 319ms (cache miss)
+31 silly packumentCache full:https://registry.npmjs.org/@influxdata%2finfluxdb-client set size:undefined disposed:false
+32 silly placeDep ROOT @influxdata/influxdb-client@1.33.2 OK for: node-red-contrib-influxdb@0.7.0 want: ~1.33.2
+33 silly placeDep ROOT influx@5.9.7 OK for: node-red-contrib-influxdb@0.7.0 want: ~5.9.3
+34 silly placeDep ROOT lodash@4.17.21 OK for: node-red-contrib-influxdb@0.7.0 want: ~4.17.21
+35 silly reify moves {}
+36 silly audit bulk request {
+36 silly audit   'node-red-contrib-influxdb': [ '0.7.0' ],
+36 silly audit   '@influxdata/influxdb-client': [ '1.33.2' ],
+36 silly audit   influx: [ '5.9.7' ],
+36 silly audit   lodash: [ '4.17.21' ]
+36 silly audit }
+37 silly tarball no local data for node-red-contrib-influxdb@https://registry.npmjs.org/node-red-contrib-influxdb/-/node-red-contrib-influxdb-0.7.0.tgz. Extracting by manifest.
+38 silly tarball no local data for lodash@https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz. Extracting by manifest.
+39 silly tarball no local data for influx@https://registry.npmjs.org/influx/-/influx-5.9.7.tgz. Extracting by manifest.
+40 silly tarball no local data for @influxdata/influxdb-client@https://registry.npmjs.org/@influxdata/influxdb-client/-/influxdb-client-1.33.2.tgz. Extracting by manifest.
+41 http fetch GET 200 https://registry.npmjs.org/node-red-contrib-influxdb/-/node-red-contrib-influxdb-0.7.0.tgz 187ms (cache miss)
+42 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 254ms
+43 silly audit report {}
+44 http fetch GET 200 https://registry.npmjs.org/influx/-/influx-5.9.7.tgz 404ms (cache miss)
+45 http fetch GET 200 https://registry.npmjs.org/@influxdata/influxdb-client/-/influxdb-client-1.33.2.tgz 427ms (cache miss)
+46 http fetch GET 200 https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz 2052ms (cache miss)
+47 silly ADD node_modules/lodash
+48 silly ADD node_modules/influx
+49 silly ADD node_modules/@influxdata/influxdb-client
+50 silly ADD node_modules/node-red-contrib-influxdb
+51 verbose cwd /data
+52 verbose os Linux 6.6.87.1-microsoft-standard-WSL2
+53 verbose node v20.19.5
+54 verbose npm  v10.8.2
+55 notice
+55 notice New [31mmajor[39m version of npm available! [31m10.8.2[39m -> [34m11.6.2[39m
+55 notice Changelog: [34mhttps://github.com/npm/cli/releases/tag/v11.6.2[39m
+55 notice To update run: [4mnpm install -g npm@11.6.2[24m
+55 notice  { force: true, [Symbol(proc-log.meta)]: true }
+56 verbose exit 0
+57 info ok

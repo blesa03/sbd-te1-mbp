@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  # 🟢 MOSQUITTO (Broker MQTT)
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto
+    restart: always
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+    networks:
+      - ming_net
+
+  # 🟠 NODE-RED (Lógica de ingesta)
+  nodered:
+    image: nodered/node-red:latest
+    container_name: nodered
+    restart: always
+    ports:
+      - "1880:1880"
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ./nodered/data:/data
+    depends_on:
+      - influxdb
+    networks:
+      - ming_net
+
+  # 🔵 INFLUXDB (Base de datos de series temporales)
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    restart: always
+    ports:
+      - "8086:8086"
+    env_file:
+      - .env
+    volumes:
+      - ./influxdb/data:/var/lib/influxdb2
+    networks:
+      - ming_net
+
+  # 🟣 GRAFANA (Visualización)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+    depends_on:
+      - influxdb
+    networks:
+      - ming_net
+
+# 🌐 Red interna compartida
+networks:
+  ming_net:
+    driver: bridge
